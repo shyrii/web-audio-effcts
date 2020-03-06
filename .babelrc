@@ -12,5 +12,9 @@
           "corejs": 3
         }]
     ],
-    "plugins": ["@babel/plugin-external-helpers","@babel/plugin-transform-classes","@babel/plugin-transform-async-to-generator"]
+    "plugins": [
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-transform-classes",
+      "@babel/plugin-transform-async-to-generator"
+    ]
   }
