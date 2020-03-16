@@ -26,9 +26,6 @@ export default class Filter {
     this.filter.gain.setValueAtTime(Math.min(Math.max(this.meta.gain.min, options.gain), this.meta.gain.max), 0);
     this.wet.gain.setValueAtTime(Math.min(Math.max(this.meta.wet.min, options.wet), this.meta.wet.max), 0);
     this.dry.gain.setValueAtTime(Math.min(Math.max(this.meta.dry.min, options.dry), this.meta.dry.max), 0);
-
-    // this.filter.gain.value = Math.min(Math.max(this.meta.gain.min, options.gain), this.meta.gain.max);
-    // this.filter.gain.value = options.gain;
   }
 
   connect(dest) {

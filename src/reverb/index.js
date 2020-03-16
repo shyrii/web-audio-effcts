@@ -1,2 +1,3 @@
 import Reverb from './reverb';
-export { Reverb };
+import buildImpulse from './build-impulse'
+export { Reverb, buildImpulse };
