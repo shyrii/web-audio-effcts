@@ -35,3 +35,18 @@ Instantiate a Equalizer effect module. Expects an AudioContext as the first para
 - low (float: 0-1)
 - mid (float: 0-1)
 - high (float: 0-1)
+
+# Tremolo(context, options)
+Instantiate a Tremolo effect module. Expects an AudioContext as the first parameter.
+## options
+- speed (float: 0-20)
+- depth (float: 0-10)
+
+# Compressor(context, options)
+Instantiate a Compressor effect module. Expects an AudioContext as the first parameter.
+## options
+- attack (float: 0-1)
+- release (float: 0-1)
+- ratio (float: 1-20)
+- threshold (float: -100-0)
+- gain (float: 0-1)
