@@ -1,3 +1,5 @@
+import { validate } from '../utils/validate';
+
 export default class Filter {
   constructor (context, options) {
     this.context = context;
@@ -7,11 +9,11 @@ export default class Filter {
     this.dry = context.createGain();
     this.wet = context.createGain();
     this.filter.type = options.type || this.meta.type.defaultValue;
-    this.filter.frequency.value = Math.min(Math.max(this.meta.frequency.min, options.frequency), this.meta.frequency.max) || this.meta.frequency.defaultValue;
-    this.filter.Q.value = Math.min(Math.max(this.meta.quality.min, options.quality), this.meta.quality.max)*30 || this.meta.quality.defaultValue;
-    this.filter.gain.value = Math.min(Math.max(this.meta.gain.min, options.gain), this.meta.gain.max) || this.meta.gain.defaultValue;
-    this.wet.gain.value = Math.min(Math.max(this.meta.wet.min, options.wet), this.meta.wet.max) || this.meta.wet.defaultValue;
-    this.dry.gain.value = Math.min(Math.max(this.meta.dry.min, options.dry), this.meta.dry.max) || this.meta.dry.defaultValue;
+    this.filter.frequency.value = validate(this.meta.frequency.min, options.frequency, this.meta.frequency.max) || this.meta.frequency.defaultValue;
+    this.filter.Q.value = validate(this.meta.quality.min, options.quality, this.meta.quality.max)*30 || this.meta.quality.defaultValue;
+    this.filter.gain.value = validate(this.meta.gain.min, options.gain, this.meta.gain.max) || this.meta.gain.defaultValue;
+    this.wet.gain.value = validate(this.meta.wet.min, options.wet, this.meta.wet.max) || this.meta.wet.defaultValue;
+    this.dry.gain.value = validate(this.meta.dry.min, options.dry, this.meta.dry.max) || this.meta.dry.defaultValue;
     this.input.connect(this.filter);
     this.filter.connect(this.wet);
     this.wet.connect(this.output);
@@ -21,11 +23,21 @@ export default class Filter {
   }
 
   updateParams(options) {
-    this.filter.frequency.setValueAtTime(Math.min(Math.max(this.meta.frequency.min, options.frequency), this.meta.frequency.max), 0);
-    this.filter.Q.setValueAtTime(Math.min(Math.max(this.meta.quality.min, options.quality), this.meta.quality.max)*30, 0);
-    this.filter.gain.setValueAtTime(Math.min(Math.max(this.meta.gain.min, options.gain), this.meta.gain.max), 0);
-    this.wet.gain.setValueAtTime(Math.min(Math.max(this.meta.wet.min, options.wet), this.meta.wet.max), 0);
-    this.dry.gain.setValueAtTime(Math.min(Math.max(this.meta.dry.min, options.dry), this.meta.dry.max), 0);
+    if (options.frequency) {
+      this.filter.frequency.setValueAtTime(validate(this.meta.frequency.min, options.frequency, this.meta.frequency.max), 0);
+    }
+    if (options.quality) {
+      this.filter.Q.setValueAtTime(validate(this.meta.quality.min, options.quality, this.meta.quality.max)*30, 0);
+    }
+    if (options.gain) {
+      this.filter.gain.setValueAtTime(validate(this.meta.gain.min, options.gain, this.meta.gain.max), 0);
+    }
+    if (options.wet) {
+      this.wet.gain.setValueAtTime(validate(this.meta.wet.min, options.wet, this.meta.wet.max), 0);
+    }
+    if (options.dry) {
+      this.dry.gain.setValueAtTime(validate(this.meta.dry.min, options.dry, this.meta.dry.max), 0);
+    }
   }
 
   connect(dest) {

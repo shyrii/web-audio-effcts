@@ -1,6 +1,27 @@
 # web-audio-effcts
 A simple delay/equalizer/filter/reverb effect module for the Web Audio API.
 
+# Installation
+`npm install @shyrii/web-audio-effects`
+
+# Example Usage
+```
+import { Delay } from '@shyrii/web-audio-effects';
+var context = new webkitAudioContext()
+  , osc = context.createOscillator()
+  , delay = new Delay(context, {
+    type: 0,
+    delay: 1.0,
+    feedback: 0.42,
+    offset: -0.1,
+    cutoff: 800,
+    dry: 1
+  });
+osc.connect(delay.input);
+delay.connect(context.destination);
+osc.start(0);
+```
+
 # Delay(context, options)
 Instantiate a Delay effect module. Expects an AudioContext as the first parameter.
 ## options

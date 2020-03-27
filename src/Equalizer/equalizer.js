@@ -1,3 +1,5 @@
+import { validate } from '../utils/validate';
+
 export default class Equalizer {
   constructor (context, options) {
     this.context = context;
@@ -39,9 +41,9 @@ export default class Equalizer {
     this.mGain = context.createGain();
     this.hGain = context.createGain();
 
-    this.lGain.gain.value = Math.min(Math.max(this.meta.low.min, options.low), this.meta.low.max) || this.meta.low.defaultValue;
-    this.mGain.gain.value = Math.min(Math.max(this.meta.mid.min, options.mid), this.meta.mid.max) || this.meta.mid.defaultValue;
-    this.hGain.gain.value = Math.min(Math.max(this.meta.high.min, options.high), this.meta.high.max) || this.meta.high.defaultValue;
+    this.lGain.gain.value = validate(this.meta.low.min, options.low, this.meta.low.max) || this.meta.low.defaultValue;
+    this.mGain.gain.value = validate(this.meta.mid.min, options.mid, this.meta.mid.max) || this.meta.mid.defaultValue;
+    this.hGain.gain.value = validate(this.meta.high.min, options.high, this.meta.high.max) || this.meta.high.defaultValue;
 
     this.lBand.connect(this.lGain);
     this.mBand.connect(this.mGain);
@@ -53,9 +55,15 @@ export default class Equalizer {
   }
 
   updateParams(options) {
-    this.lGain.gain.value = Math.min(Math.max(this.meta.low.min, options.low), this.meta.low.max);
-    this.mGain.gain.value = Math.min(Math.max(this.meta.mid.min, options.mid), this.meta.mid.max);
-    this.hGain.gain.value = Math.min(Math.max(this.meta.high.min, options.high), this.meta.high.max);
+    if (options.low) {
+      this.lGain.gain.value = validate(this.meta.low.min, options.low, this.meta.low.max);
+    }
+    if (options.mid) {
+      this.mGain.gain.value = validate(this.meta.mid.min, options.mid, this.meta.mid.max);
+    }
+    if (options.high) {
+      this.hGain.gain.value = validate(this.meta.high.min, options.high, this.meta.high.max);
+    }
   }
 
   connect(dest) {

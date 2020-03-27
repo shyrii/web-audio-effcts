@@ -1,3 +1,5 @@
+import { validate } from '../utils/validate';
+
 export default class Equalizer {
   constructor (context, options) {
     this.context = context;
@@ -8,8 +10,8 @@ export default class Equalizer {
     this.depth = context.createGain();
     this.lof = context.createOscillator();
 
-    this.lof.frequency.value = Math.min(Math.max(this.meta.speed.min, options.speed), this.meta.speed.max) || this.meta.speed.defaultValue;
-    this.depth.gain.value = Math.min(Math.max(this.meta.depth.min, options.depth), this.meta.depth.max) || this.meta.depth.defaultValue;
+    this.lof.frequency.value = validate(this.meta.speed.min, options.speed, this.meta.speed.max) || this.meta.speed.defaultValue;
+    this.depth.gain.value = validate(this.meta.depth.min, options.depth, this.meta.depth.max) || this.meta.depth.defaultValue;
   
     this.input.connect(this.amp);
     this.lof.connect(this.depth);
@@ -19,8 +21,12 @@ export default class Equalizer {
   }
 
   updateParams(options) {
-    this.lof.frequency.value = Math.min(Math.max(this.meta.speed.min, options.speed), this.meta.speed.max);
-    this.depth.gain.value = Math.min(Math.max(this.meta.depth.min, options.depth), this.meta.depth.max);
+    if (options.speed) {
+      this.lof.frequency.value = validate(this.meta.speed.min, options.speed, this.meta.speed.max);
+    }
+    if (options.depth) {
+      this.depth.gain.value = validate(this.meta.depth.min, options.depth, this.meta.depth.max);
+    }
   }
 
   connect(dest) {

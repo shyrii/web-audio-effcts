@@ -1,16 +1,17 @@
 import { Filter }  from '../filter';
+import { validate } from '../utils/validate';
 
 export default class Delay {
   constructor(context, options) {
     this.input = context.createGain();
     this.output = context.createGain();
 
-    this.type = Math.min(Math.max(this.meta.type.min, options.type), this.meta.type.max) || this.meta.type.defaultValue;
-    this.delay = Math.min(Math.max(this.meta.delay.min, options.delay), this.meta.delay.max) || this.meta.delay.defaultValue;
-    this.feedback = Math.min(Math.max(this.meta.feedback.min, options.feedback), this.meta.feedback.max) || this.meta.feedback.defaultValue;
-    this.cutoff = Math.min(Math.max(this.meta.cutoff.min, options.cutoff), this.meta.cutoff.max) || this.meta.cutoff.defaultValue;
-    this.dry = Math.min(Math.max(this.meta.dry.min, options.dry), this.meta.dry.max) || this.meta.dry.defaultValue;
-    this.offset = Math.min(Math.max(this.meta.offset.min, options.offset), this.meta.offset.max) || this.meta.offset.defaultValue;
+    this.type = validate(this.meta.type.min, options.type, this.meta.type.max) || this.meta.type.defaultValue;
+    this.delay = validate(this.meta.delay.min, options.delay, this.meta.delay.max) || this.meta.delay.defaultValue;
+    this.feedback = validate(this.meta.feedback.min, options.feedback, this.meta.feedback.max) || this.meta.feedback.defaultValue;
+    this.cutoff = validate(this.meta.cutoff.min, options.cutoff, this.meta.cutoff.max) || this.meta.cutoff.defaultValue;
+    this.dry = validate(this.meta.dry.min, options.dry, this.meta.dry.max) || this.meta.dry.defaultValue;
+    this.offset = validate(this.meta.offset.min, options.offset, this.meta.offset.max) || this.meta.offset.defaultValue;
 
     this.split = context.createChannelSplitter(2);
     this.merge = context.createChannelMerger(2);
@@ -71,22 +72,34 @@ export default class Delay {
   }
 
   updateParams(options) {
-    this.type = Math.min(Math.max(this.meta.type.min, options.type), this.meta.type.max);
-    this.route();
-    this.leftDelay.delayTime.setValueAtTime(Math.min(Math.max(this.meta.delay.min, options.delay), this.meta.delay.max), 0);
-    this.rightDelay.delayTime.setValueAtTime(Math.min(Math.max(this.meta.delay.min, options.delay), this.meta.delay.max), 0);
-    this.leftGain.gain.setValueAtTime(Math.min(Math.max(this.meta.feedback.min, options.feedback), this.meta.feedback.max), 0);
-    this.rightGain.gain.setValueAtTime(Math.min(Math.max(this.meta.feedback.min, options.feedback), this.meta.feedback.max), 0);
-    this.leftFilter.frequency = Math.min(Math.max(this.meta.cutoff.min, options.cutoff), this.meta.cutoff.max);
-    this.rightFilter.frequency = Math.min(Math.max(this.meta.cutoff.min, options.cutoff), this.meta.cutoff.max);
-    this.dry.gain.setValueAtTime(Math.min(Math.max(this.meta.dry.min, options.dry), this.meta.dry.max), 0);
-    let offsetTime = this.delay + options.offset;
-    if (this.offset < 0) {
-      this.leftDelay.delayTime.setValueAtTime(offsetTime, 0);
-      this.rightDelay.delayTime.setValueAtTime(this.delay, 0);
-    }else {
-      this.leftDelay.delayTime.setValueAtTime(this.delay, 0);
-      this.rightDelay.delayTime.setValueAtTime(offsetTime, 0);
+    if (options.type) {
+      this.type = validate(this.meta.type.min, options.type, this.meta.type.max);
+      this.route();
+    }
+    if (options.delay) {
+      this.leftDelay.delayTime.setValueAtTime(validate(this.meta.delay.min, options.delay, this.meta.delay.max), 0);
+      this.rightDelay.delayTime.setValueAtTime(validate(this.meta.delay.min, options.delay, this.meta.delay.max), 0);
+    }
+    if (options.feedback) {
+      this.leftGain.gain.setValueAtTime(validate(this.meta.feedback.min, options.feedback, this.meta.feedback.max), 0);
+      this.rightGain.gain.setValueAtTime(validate(this.meta.feedback.min, options.feedback, this.meta.feedback.max), 0);
+    }
+    if (options.cutoff) {
+      this.leftFilter.frequency = validate(this.meta.cutoff.min, options.cutoff, this.meta.cutoff.max);
+      this.rightFilter.frequency = validate(this.meta.cutoff.min, options.cutoff, this.meta.cutoff.max);
+    }
+    if (options.dry) {
+      this.dry.gain.setValueAtTime(validate(this.meta.dry.min, options.dry, this.meta.dry.max), 0);
+    }
+    if (options.offset) {
+      let offsetTime = this.delay + options.offset;
+      if (this.offset < 0) {
+        this.leftDelay.delayTime.setValueAtTime(offsetTime, 0);
+        this.rightDelay.delayTime.setValueAtTime(this.delay, 0);
+      }else {
+        this.leftDelay.delayTime.setValueAtTime(this.delay, 0);
+        this.rightDelay.delayTime.setValueAtTime(offsetTime, 0);
+      }
     }
   }
 

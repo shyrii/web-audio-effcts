@@ -1,3 +1,5 @@
+import { validate } from '../utils/validate';
+
 export default class Reverb {
   constructor(context, options) {
     this.context = context;
@@ -20,18 +22,26 @@ export default class Reverb {
     this.filter.type = 'lowpass';
     this.building = false;
 
-    this.seconds = Math.min(Math.max(this.meta.seconds.min, options.seconds), this.meta.seconds.max) || this.meta.seconds.defaultValue;
-    this.decay = Math.min(Math.max(this.meta.decay.min, options.decay), this.meta.decay.max) || this.meta.decay.defaultValue;
-    this.delay = Math.min(Math.max(this.meta.delay.min, options.delay), this.meta.delay.max) || this.meta.delay.defaultValue;
-    this.reverse = Math.min(Math.max(this.meta.reverse.min, options.reverse), this.meta.reverse.max) || this.meta.reverse.defaultValue;
+    this.seconds = validate(this.meta.seconds.min, options.seconds, this.meta.seconds.max) || this.meta.seconds.defaultValue;
+    this.decay = validate(this.meta.decay.min, options.decay, this.meta.decay.max) || this.meta.decay.defaultValue;
+    this.delay = validate(this.meta.delay.min, options.delay, this.meta.delay.max) || this.meta.delay.defaultValue;
+    this.reverse = validate(this.meta.reverse.min, options.reverse, this.meta.reverse.max) || this.meta.reverse.defaultValue;
     this.buildImpulse();
   }
 
   updateParams(options) {
-    this.seconds = Math.min(Math.max(this.meta.seconds.min, options.seconds), this.meta.seconds.max);
-    this.decay = Math.min(Math.max(this.meta.decay.min, options.decay), this.meta.decay.max);
-    this.delay = Math.min(Math.max(this.meta.delay.min, options.delay), this.meta.delay.max);
-    this.reverse = Math.min(Math.max(this.meta.reverse.min, options.reverse), this.meta.reverse.max);
+    if (options.seconds) {
+      this.seconds = validate(this.meta.seconds.min, options.seconds, this.meta.seconds.max);
+    }
+    if (options.decay) {
+      this.decay = validate(this.meta.decay.min, options.decay, this.meta.decay.max);
+    }
+    if (options.delay) {
+      this.delay = validate(this.meta.delay.min, options.delay, this.meta.delay.max);
+    }
+    if (options.reverse) {
+      this.reverse = validate(this.meta.reverse.min, options.reverse, this.meta.reverse.max);
+    }
     this.buildImpulse();
   }
 
