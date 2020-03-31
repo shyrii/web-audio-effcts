@@ -1,2 +1,2 @@
-import Tremolo from './tremolqo';
+import Tremolo from './tremolo';
 export { Tremolo };
