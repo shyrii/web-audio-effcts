@@ -41,13 +41,13 @@ export default class Equalizer {
     speed: {
       min: 0,
       max: 20,
-      defaultValue: 0.7,
+      defaultValue: 5,
       type: "float"
     },
     depth: {
       min: 0,
-      max: 10,
-      defaultValue: 0.5,
+      max: 1,
+      defaultValue: 0.3,
       type: "float"
     },
   }
