@@ -23,6 +23,9 @@ export default class Filter {
   }
 
   updateParams(options) {
+    if (options.type) {
+      this.filter.type = options.type;
+    }
     if (options.frequency) {
       this.filter.frequency.setValueAtTime(validate(this.meta.frequency.min, options.frequency, this.meta.frequency.max), 0);
     }
@@ -50,37 +53,37 @@ export default class Filter {
 
   meta = {
     type: {
-      defaultValue: 'lowpass',
+      defaultValue: 'highpass',
       type: "string"
     },
     frequency: {
-      min: 0,
+      min: 10,
       max: 22050,
-      defaultValue: 8000,
+      defaultValue: 350,
       type: "float"
     },
     quality: {
       min: 0.0001,
       max: 1000,
-      defaultValue: 1.0,
+      defaultValue: 10,
       type: "float"
     },
     gain: {
       min: -40,
       max: 40,
-      defaultValue: 1,
+      defaultValue: 0,
       type: "float"
     },
     wet: {
       min: 0,
       max: 1,
-      defaultValue: 1,
+      defaultValue: 0.8,
       type: "float"
     },
     dry: {
       min: 0,
       max: 1,
-      defaultValue: 0,
+      defaultValue: 0.2,
       type: "float"
     }
   }
